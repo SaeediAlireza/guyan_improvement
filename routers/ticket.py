@@ -8,99 +8,85 @@ from sqlalchemy import update
 from util import util
 
 
-router = APIRouter(tags=["user"], prefix="/users")
+router = APIRouter(tags=["ticket"], prefix="/tickets")
 
 
 @router.post("/add", status_code=status.HTTP_201_CREATED)
-def create_user(
-    request: schemas.UserAddRequest,
+def create_ticket(
+    request: schemas.TicketAddRequest,
     db: Session = Depends(util.get_db),
 ):
-    new_user = model.User(
-        user_name=request.user_name,
-        password=util.hash(request.password),
-        fname=request.fname,
-        lname=request.lname,
-        user_type_id=request.user_type_id,
+    new_ticket = model.Ticket(
+        description=request.description,
+        user_id=request.user_id,
     )
-    user_exist = (
-        db.query(model.User).filter(model.User.user_name == new_user.user_name).first()
+    Ticket_exist = (
+        db.query(model.Ticket)
+        .filter(model.Ticket.Ticket_name == new_ticket.Ticket_name)
+        .first()
     )
 
-    if user_exist:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user exists")
+    if Ticket_exist:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="Ticket exists"
+        )
     else:
-        db.add(new_user)
+        db.add(new_ticket)
         db.commit()
-        db.refresh(new_user)
-        return new_user
+        db.refresh(new_ticket)
+        return new_ticket
 
 
-@router.get("/by-type/{type_id}", response_model=List[schemas.UserInfoResponse])
-def get_users_by_type(
-    type_id: int,
+@router.get("/all", response_model=List[schemas.TicketInfoResponse])
+def get_all_tickets(
     response: Response,
     db: Session = Depends(util.get_db),
 ):
-    users = db.query(model.User).filter(model.User.user_type_id == type_id).all()
-    if not users:
+    Tickets = db.query(model.Ticket).all()
+    if not Tickets:
         response.status_code = status.HTTP_404_NOT_FOUND
-    return users
+    return Tickets
 
 
-@router.get("/all", response_model=List[schemas.UserInfoResponse])
-def get_all_users(
-    response: Response,
-    db: Session = Depends(util.get_db),
-):
-    users = db.query(model.User).all()
-    if not users:
-        response.status_code = status.HTTP_404_NOT_FOUND
-    return users
-
-
-@router.get("/{user_id}", response_model=schemas.UserInfoResponse)
-def get_user_by_id(
-    user_id: int,
+@router.get("/{Ticket_id}", response_model=schemas.TicketInfoResponse)
+def get_ticket_by_id(
+    Ticket_id: int,
     response: Response,
     db: Session = Depends(util.get_db),
 ):
 
-    user = db.query(model.User).filter(model.User.id == user_id).first()
+    Ticket = db.query(model.Ticket).filter(model.Ticket.id == Ticket_id).first()
 
-    if not user:
+    if not Ticket:
         response.status_code = status.HTTP_404_NOT_FOUND
-    return user
+    return Ticket
 
 
 @router.put("update")
-def update_user(
+def update_ticket(
     response: Response,
-    request: schemas.UserUpdateRequest,
+    request: schemas.TicketUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
-    user = db.query(model.User).filter(model.User.id == request.id).first()
-    if not user:
+    Ticket = db.query(model.Ticket).filter(model.Ticket.id == request.id).first()
+    if not Ticket:
         response.status_code = status.HTTP_404_NOT_FOUND
-    user.fname = request.fname
-    user.lname = request.lname
-    user.user_name = request.user_name
-    user.user_type_id = request.user_type_id
-
+    Ticket.description = request.description
+    Ticket.user_id = request.user_id
     db.commit()
-    db.refresh(user)
-    return user
+    db.refresh(Ticket)
+    return Ticket
 
 
-@router.get("/delete/{user_id}")
-def delete_user_by_id(
-    user_id: int,
+@router.get("/delete/{Ticket_id}")
+def delete_ticket_by_id(
+    Ticket_id: int,
     response: Response,
     db: Session = Depends(util.get_db),
 ):
-    user = db.query(model.User).filter(model.User.id == user_id).first()
-    if not user:
+    Ticket = db.query(model.Ticket).filter(model.Ticket.id == Ticket_id).first()
+    if not Ticket:
         response.status_code = status.HTTP_404_NOT_FOUND
-    db.delete(user)
+    db.delete(Ticket)
     db.commit()
     return {"detail": "Item deleted successfully"}

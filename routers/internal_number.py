@@ -8,99 +8,89 @@ from sqlalchemy import update
 from util import util
 
 
-router = APIRouter(tags=["user"], prefix="/users")
+router = APIRouter(tags=["internal-number"], prefix="/internal-numbers")
 
 
 @router.post("/add", status_code=status.HTTP_201_CREATED)
-def create_user(
-    request: schemas.UserAddRequest,
+def create_internal_number(
+    request: schemas.InternalNumberAddRequest,
     db: Session = Depends(util.get_db),
 ):
-    new_user = model.User(
-        user_name=request.user_name,
-        password=util.hash(request.password),
-        fname=request.fname,
-        lname=request.lname,
-        user_type_id=request.user_type_id,
-    )
-    user_exist = (
-        db.query(model.User).filter(model.User.user_name == new_user.user_name).first()
+    new_internal_number = model.InternalNumber(
+        number=request.number,
+        path=request.path,
+        phone_number_id=request.phone_number_id,
     )
 
-    if user_exist:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user exists")
-    else:
-        db.add(new_user)
-        db.commit()
-        db.refresh(new_user)
-        return new_user
+    db.add(new_internal_number)
+    db.commit()
+    db.refresh(new_internal_number)
+    return new_internal_number
 
 
-@router.get("/by-type/{type_id}", response_model=List[schemas.UserInfoResponse])
-def get_users_by_type(
-    type_id: int,
+@router.get("/all", response_model=List[schemas.InternalNumberInfoResponse])
+def get_all_internal_numbers(
     response: Response,
     db: Session = Depends(util.get_db),
 ):
-    users = db.query(model.User).filter(model.User.user_type_id == type_id).all()
-    if not users:
+    InternalNumbers = db.query(model.InternalNumber).all()
+    if not InternalNumbers:
         response.status_code = status.HTTP_404_NOT_FOUND
-    return users
+    return InternalNumbers
 
 
-@router.get("/all", response_model=List[schemas.UserInfoResponse])
-def get_all_users(
-    response: Response,
-    db: Session = Depends(util.get_db),
-):
-    users = db.query(model.User).all()
-    if not users:
-        response.status_code = status.HTTP_404_NOT_FOUND
-    return users
-
-
-@router.get("/{user_id}", response_model=schemas.UserInfoResponse)
-def get_user_by_id(
-    user_id: int,
+@router.get("/{InternalNumber_id}", response_model=schemas.InternalNumberInfoResponse)
+def get_internal_number_by_id(
+    InternalNumber_id: int,
     response: Response,
     db: Session = Depends(util.get_db),
 ):
 
-    user = db.query(model.User).filter(model.User.id == user_id).first()
+    InternalNumber = (
+        db.query(model.InternalNumber)
+        .filter(model.InternalNumber.id == InternalNumber_id)
+        .first()
+    )
 
-    if not user:
+    if not InternalNumber:
         response.status_code = status.HTTP_404_NOT_FOUND
-    return user
+    return InternalNumber
 
 
 @router.put("update")
-def update_user(
+def update_internal_number(
     response: Response,
-    request: schemas.UserUpdateRequest,
+    request: schemas.InternalNumberUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
-    user = db.query(model.User).filter(model.User.id == request.id).first()
-    if not user:
+    InternalNumber = (
+        db.query(model.InternalNumber)
+        .filter(model.InternalNumber.id == request.id)
+        .first()
+    )
+    if not InternalNumber:
         response.status_code = status.HTTP_404_NOT_FOUND
-    user.fname = request.fname
-    user.lname = request.lname
-    user.user_name = request.user_name
-    user.user_type_id = request.user_type_id
-
+    InternalNumber.number = request.number
+    InternalNumber.path = request.path
+    InternalNumber.phone_number_id = request.phone_number_id
     db.commit()
-    db.refresh(user)
-    return user
+    db.refresh(InternalNumber)
+    return InternalNumber
 
 
-@router.get("/delete/{user_id}")
-def delete_user_by_id(
-    user_id: int,
+@router.get("/delete/{InternalNumber_id}")
+def delete_internal_number_by_id(
+    InternalNumber_id: int,
     response: Response,
     db: Session = Depends(util.get_db),
 ):
-    user = db.query(model.User).filter(model.User.id == user_id).first()
-    if not user:
+    InternalNumber = (
+        db.query(model.InternalNumber)
+        .filter(model.InternalNumber.id == InternalNumber_id)
+        .first()
+    )
+    if not InternalNumber:
         response.status_code = status.HTTP_404_NOT_FOUND
-    db.delete(user)
+    db.delete(InternalNumber)
     db.commit()
     return {"detail": "Item deleted successfully"}

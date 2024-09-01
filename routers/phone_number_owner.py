@@ -8,99 +8,103 @@ from sqlalchemy import update
 from util import util
 
 
-router = APIRouter(tags=["user"], prefix="/users")
+router = APIRouter(tags=["phone-number-owner"], prefix="/phone-number-owners")
 
 
 @router.post("/add", status_code=status.HTTP_201_CREATED)
-def create_user(
-    request: schemas.UserAddRequest,
+def create_phone_number_owner(
+    request: schemas.PhoneNumberOwnerAddRequest,
     db: Session = Depends(util.get_db),
 ):
-    new_user = model.User(
-        user_name=request.user_name,
-        password=util.hash(request.password),
-        fname=request.fname,
-        lname=request.lname,
-        user_type_id=request.user_type_id,
+    new_phone_number_owner = model.PhoneNumberOwner(
+        fname=request.fname, lname=request.lname, email=request.email
     )
-    user_exist = (
-        db.query(model.User).filter(model.User.user_name == new_user.user_name).first()
+    PhoneNumberOwner_exist = (
+        db.query(model.PhoneNumberOwner)
+        .filter(
+            model.PhoneNumberOwner.PhoneNumberOwner_name
+            == new_phone_number_owner.PhoneNumberOwner_name
+        )
+        .first()
     )
 
-    if user_exist:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user exists")
+    if PhoneNumberOwner_exist:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail="PhoneNumberOwner exists"
+        )
     else:
-        db.add(new_user)
+        db.add(new_phone_number_owner)
         db.commit()
-        db.refresh(new_user)
-        return new_user
+        db.refresh(new_phone_number_owner)
+        return new_phone_number_owner
 
 
-@router.get("/by-type/{type_id}", response_model=List[schemas.UserInfoResponse])
-def get_users_by_type(
-    type_id: int,
+@router.get("/all", response_model=List[schemas.PhoneNumberOwnerInfoResponse])
+def get_all_phone_number_owners(
     response: Response,
     db: Session = Depends(util.get_db),
 ):
-    users = db.query(model.User).filter(model.User.user_type_id == type_id).all()
-    if not users:
+    PhoneNumberOwners = db.query(model.PhoneNumberOwner).all()
+    if not PhoneNumberOwners:
         response.status_code = status.HTTP_404_NOT_FOUND
-    return users
+    return PhoneNumberOwners
 
 
-@router.get("/all", response_model=List[schemas.UserInfoResponse])
-def get_all_users(
-    response: Response,
-    db: Session = Depends(util.get_db),
-):
-    users = db.query(model.User).all()
-    if not users:
-        response.status_code = status.HTTP_404_NOT_FOUND
-    return users
-
-
-@router.get("/{user_id}", response_model=schemas.UserInfoResponse)
-def get_user_by_id(
-    user_id: int,
+@router.get(
+    "/{PhoneNumberOwner_id}", response_model=schemas.PhoneNumberOwnerInfoResponse
+)
+def get_phone_number_owner_by_id(
+    PhoneNumberOwner_id: int,
     response: Response,
     db: Session = Depends(util.get_db),
 ):
 
-    user = db.query(model.User).filter(model.User.id == user_id).first()
+    PhoneNumberOwner = (
+        db.query(model.PhoneNumberOwner)
+        .filter(model.PhoneNumberOwner.id == PhoneNumberOwner_id)
+        .first()
+    )
 
-    if not user:
+    if not PhoneNumberOwner:
         response.status_code = status.HTTP_404_NOT_FOUND
-    return user
+    return PhoneNumberOwner
 
 
 @router.put("update")
-def update_user(
+def update_phone_number_owner(
     response: Response,
-    request: schemas.UserUpdateRequest,
+    request: schemas.PhoneNumberOwnerUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
-    user = db.query(model.User).filter(model.User.id == request.id).first()
-    if not user:
+    PhoneNumberOwner = (
+        db.query(model.PhoneNumberOwner)
+        .filter(model.PhoneNumberOwner.id == request.id)
+        .first()
+    )
+    if not PhoneNumberOwner:
         response.status_code = status.HTTP_404_NOT_FOUND
-    user.fname = request.fname
-    user.lname = request.lname
-    user.user_name = request.user_name
-    user.user_type_id = request.user_type_id
+    PhoneNumberOwner.fname = request.fname
+    PhoneNumberOwner.lname = request.lname
+    PhoneNumberOwner.email = request.email
 
     db.commit()
-    db.refresh(user)
-    return user
+    db.refresh(PhoneNumberOwner)
+    return PhoneNumberOwner
 
 
-@router.get("/delete/{user_id}")
-def delete_user_by_id(
-    user_id: int,
+@router.get("/delete/{PhoneNumberOwner_id}")
+def delete_phone_number_owner_by_id(
+    PhoneNumberOwner_id: int,
     response: Response,
     db: Session = Depends(util.get_db),
 ):
-    user = db.query(model.User).filter(model.User.id == user_id).first()
-    if not user:
+    PhoneNumberOwner = (
+        db.query(model.PhoneNumberOwner)
+        .filter(model.PhoneNumberOwner.id == PhoneNumberOwner_id)
+        .first()
+    )
+    if not PhoneNumberOwner:
         response.status_code = status.HTTP_404_NOT_FOUND
-    db.delete(user)
+    db.delete(PhoneNumberOwner)
     db.commit()
     return {"detail": "Item deleted successfully"}

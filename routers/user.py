@@ -21,6 +21,7 @@ def create_user(
         password=util.hash(request.password),
         fname=request.fname,
         lname=request.lname,
+        email=request.email,
         user_type_id=request.user_type_id,
     )
     user_exist = (
@@ -84,6 +85,7 @@ def update_user(
         response.status_code = status.HTTP_404_NOT_FOUND
     user.fname = request.fname
     user.lname = request.lname
+    user.email = request.email
     user.user_name = request.user_name
     user.user_type_id = request.user_type_id
 
