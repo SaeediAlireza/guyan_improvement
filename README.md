@@ -4,6 +4,13 @@ Hobab is an App for automation of fish farming specified for caviar fishes
 
 ## setting up
 
+first install python and mysql;
+then run this command for making the database:
+
+```sql
+CREATE DATABASE guyan;
+```
+
 for installing requirments first set up mysql with no passwod for root user;
 and use this command to install python requrements:
 
