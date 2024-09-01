@@ -34,8 +34,8 @@ class InternalNumber(Base):
     number = Column(String(999))
     path = Column(String(999))
 
-    phone_number_id = Column(Integer, ForeignKey("phone_number.id"))
-    phone_numbers = relationship("PhoneNumber", back_populates="internal_numbers")
+    phone_number_id = Column(Integer, ForeignKey("phone_numbers.id"))
+    phone_number = relationship("PhoneNumber", back_populates="internal_number_s")
 
 
 class PhoneNumber(Base):
@@ -44,12 +44,12 @@ class PhoneNumber(Base):
     id = Column(Integer, primary_key=True, index=True)
     number = Column(String(999))
 
-    phone_number_owner_id = Column(Integer, ForeignKey("phone_number_owner.id"))
+    phone_number_owner_id = Column(Integer, ForeignKey("phone_number_owners.id"))
     phone_number_owner = relationship(
         "PhoneNumberOwner", back_populates="phone_numbers"
     )
 
-    internal_numbers = relationship("InternalNumber", back_populates="phone_numbers")
+    internal_number_s = relationship("InternalNumber", back_populates="phone_number")
 
 
 class PhoneNumberOwner(Base):
