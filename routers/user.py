@@ -19,10 +19,9 @@ def create_user(
     new_user = model.User(
         user_name=request.user_name,
         password=util.hash(request.password),
-        name=request.name,
+        fname=request.name,
+        lname=request.name,
         user_type_id=request.user_type_id,
-        start_work_time=request.start_work_time,
-        end_work_time=request.end_work_time,
     )
     user_exist = (
         db.query(model.User).filter(model.User.user_name == new_user.user_name).first()
@@ -83,10 +82,9 @@ def update_user(
     user = db.query(model.User).filter(model.User.id == request.id).first()
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
-    user.end_work_time = request.end_work_time
-    user.name = request.name
+    user.fname = request.fname
+    user.lname = request.lname
     user.user_name = request.user_name
-    user.start_work_time = request.start_work_time
     user.user_type_id = request.user_type_id
 
     db.commit()
