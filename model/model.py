@@ -14,7 +14,6 @@ class User(Base):
     user_type_id = Column(Integer, ForeignKey("user_types.id"))
     type = relationship("UserType", back_populates="type_users")
 
-    shifts = relationship("Shift", back_populates="user")
     tickets = relationship("Ticket", back_populates="user")
 
 
@@ -24,7 +23,7 @@ class UserType(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(999))
 
-    type_users = relationship("Ticket", back_populates="type")
+    type_users = relationship("User", back_populates="type")
 
 
 class InternalNumber(Base):

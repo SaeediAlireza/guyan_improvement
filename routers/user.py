@@ -19,8 +19,8 @@ def create_user(
     new_user = model.User(
         user_name=request.user_name,
         password=util.hash(request.password),
-        fname=request.name,
-        lname=request.name,
+        fname=request.fname,
+        lname=request.lname,
         user_type_id=request.user_type_id,
     )
     user_exist = (
