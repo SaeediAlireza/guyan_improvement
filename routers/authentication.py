@@ -27,5 +27,9 @@ def login(
 
     access_token = util.create_access_token(data={"sub": user.user_name})
     return schemas.Token(
-        access_token=access_token, token_type="bearer", user_type=user.user_type_id
+        access_token=access_token,
+        token_type="bearer",
+        user_type=user.user_type_id,
+        email=user.email,
+        name=user.fname + user.lname,
     )
