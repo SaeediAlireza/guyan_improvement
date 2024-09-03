@@ -78,7 +78,7 @@ def update_internal_number(
     return InternalNumber
 
 
-@router.get("/delete/{InternalNumber_id}")
+@router.delete("/delete/{InternalNumber_id}")
 def delete_internal_number_by_id(
     InternalNumber_id: int,
     response: Response,

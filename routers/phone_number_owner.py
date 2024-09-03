@@ -92,7 +92,7 @@ def update_phone_number_owner(
     return PhoneNumberOwner
 
 
-@router.get("/delete/{PhoneNumberOwner_id}")
+@router.delete("/delete/{PhoneNumberOwner_id}")
 def delete_phone_number_owner_by_id(
     PhoneNumberOwner_id: int,
     response: Response,

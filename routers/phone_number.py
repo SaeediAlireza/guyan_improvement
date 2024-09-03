@@ -68,7 +68,7 @@ def update_phone_number(
     return user_type
 
 
-@router.get("/delete/{user_type_id}")
+@router.delete("/delete/{user_type_id}")
 def delete_phone_number_by_id(
     user_type_id: int,
     response: Response,

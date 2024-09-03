@@ -55,6 +55,14 @@ class UserUpdateRequest(BaseModel):
         from_attributes = True
 
 
+class UserUpdatePasswordRequest(BaseModel):
+    id: int
+    password: str
+
+    class Config:
+        from_attributes = True
+
+
 class UserInfoResponse(BaseModel):
     id: int
     user_name: str

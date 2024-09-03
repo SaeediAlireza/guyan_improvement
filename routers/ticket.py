@@ -78,7 +78,7 @@ def update_ticket(
     return Ticket
 
 
-@router.get("/delete/{Ticket_id}")
+@router.delete("/delete/{Ticket_id}")
 def delete_ticket_by_id(
     Ticket_id: int,
     response: Response,

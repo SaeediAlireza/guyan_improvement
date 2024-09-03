@@ -94,7 +94,23 @@ def update_user(
     return user
 
 
-@router.get("/delete/{user_id}")
+@router.put("password")
+def update_user_password(
+    response: Response,
+    request: schemas.UserUpdatePasswordRequest,
+    db: Session = Depends(util.get_db),
+):
+    user = db.query(model.User).filter(model.User.id == request.id).first()
+    if not user:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    user.password = util.hash(request.password)
+
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.delete("/delete/{user_id}")
 def delete_user_by_id(
     user_id: int,
     response: Response,
