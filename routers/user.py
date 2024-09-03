@@ -60,6 +60,17 @@ def get_all_users(
     return users
 
 
+@router.get("/all/head", response_model=List[schemas.UserInfoResponse])
+def get_15_users(
+    response: Response,
+    db: Session = Depends(util.get_db),
+):
+    users = db.query(model.User).all()
+    if not users:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return users[:16]
+
+
 @router.get("/{user_id}", response_model=schemas.UserInfoResponse)
 def get_user_by_id(
     user_id: int,
