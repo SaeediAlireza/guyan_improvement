@@ -5,6 +5,10 @@ import ssl
 
 import routers.authentication
 
+import routers.internal_number
+import routers.phone_number
+import routers.phone_number_owner
+import routers.ticket
 import routers.user
 import routers.user_type
 from fastapi.middleware.cors import CORSMiddleware
@@ -28,3 +32,7 @@ app.include_router(routers.authentication.router)
 
 app.include_router(routers.user_type.router)
 app.include_router(routers.user.router)
+app.include_router(routers.ticket.router)
+app.include_router(routers.phone_number_owner.router)
+app.include_router(routers.phone_number.router)
+app.include_router(routers.internal_number.router)
