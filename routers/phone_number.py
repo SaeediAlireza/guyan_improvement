@@ -26,7 +26,7 @@ def add_phone_number(
     return new_phone_number
 
 
-@router.get("/all", response_model=List[schemas.PhoneNumberInfo])
+@router.get("/all", response_model=List[schemas.PhoneNumberInfoResponse])
 def get_all_phone_numbers(
     response: Response,
     db: Session = Depends(util.get_db),
@@ -37,7 +37,7 @@ def get_all_phone_numbers(
     return user_types
 
 
-@router.get("/{user_type_id}", response_model=schemas.PhoneNumberInfo)
+@router.get("/{user_type_id}", response_model=schemas.PhoneNumberInfoResponse)
 def get_phone_number_by_id(
     user_type_id: int,
     response: Response,
