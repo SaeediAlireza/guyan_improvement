@@ -17,7 +17,7 @@ def create_internal_number(
     db: Session = Depends(util.get_db),
 ):
     new_internal_number = model.InternalNumber(
-        number=request.number,
+        number=request.internal_number,
         path=request.path,
         phone_number_id=request.phone_number_id,
     )
@@ -70,7 +70,7 @@ def update_internal_number(
     )
     if not InternalNumber:
         response.status_code = status.HTTP_404_NOT_FOUND
-    InternalNumber.number = request.number
+    InternalNumber.internal_number = request.internal_number
     InternalNumber.path = request.path
     InternalNumber.phone_number_id = request.phone_number_id
     db.commit()

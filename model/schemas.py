@@ -78,14 +78,12 @@ class UserInfoResponse(BaseModel):
 # phone number owner
 class PhoneNumberOwnerAddRequest(BaseModel):
     name: str
-    email: str
 
 
 class PhoneNumberOwnerUpdateRequest(BaseModel):
     id: int
     fname: str
     name: str
-    email: str
 
     class Config:
         from_attributes = True
@@ -94,7 +92,6 @@ class PhoneNumberOwnerUpdateRequest(BaseModel):
 class PhoneNumberOwnerInfoResponse(BaseModel):
     id: int
     name: str
-    email: str
 
     class Config:
         from_attributes = True
@@ -102,14 +99,12 @@ class PhoneNumberOwnerInfoResponse(BaseModel):
 
 # phone number
 class PhoneNumberAddRequest(BaseModel):
-    user_name: str
     number: str
     phone_number_owner_id: int
 
 
 class PhoneNumberUpdateRequest(BaseModel):
     id: int
-    user_name: str
     number: str
     phone_number_owner_id: int
 
@@ -119,7 +114,6 @@ class PhoneNumberUpdateRequest(BaseModel):
 
 class PhoneNumberInfoResponse(BaseModel):
     id: int
-    user_name: str
     number: str
     phone_number_owner_id: PhoneNumberOwnerInfoResponse
 
@@ -153,14 +147,14 @@ class TicketInfoResponse(BaseModel):
 
 # internal number
 class InternalNumberAddRequest(BaseModel):
-    number: str
+    internal_number: str
     path: str
     phone_number_id: int
 
 
 class InternalNumberUpdateRequest(BaseModel):
     id: int
-    number: str
+    internal_number: str
     path: str
 
     phone_number_id: int
@@ -171,7 +165,7 @@ class InternalNumberUpdateRequest(BaseModel):
 
 class InternalNumberInfoResponse(BaseModel):
     id: int
-    number: str
+    internal_number: str
     path: str
     phone_number: PhoneNumberInfoResponse
 

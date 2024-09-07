@@ -58,7 +58,6 @@ class PhoneNumberOwner(Base):
     __tablename__ = "phone_number_owners"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(999))
-    email = Column(String(999))
 
     phone_numbers = relationship("PhoneNumber", back_populates="phone_number_owner")
 

@@ -21,10 +21,7 @@ def create_phone_number_owner(
     )
     PhoneNumberOwner_exist = (
         db.query(model.PhoneNumberOwner)
-        .filter(
-            model.PhoneNumberOwner.PhoneNumberOwner_name
-            == new_phone_number_owner.PhoneNumberOwner_name
-        )
+        .filter(model.PhoneNumberOwner.name == new_phone_number_owner.name)
         .first()
     )
 
@@ -84,7 +81,6 @@ def update_phone_number_owner(
     if not PhoneNumberOwner:
         response.status_code = status.HTTP_404_NOT_FOUND
     PhoneNumberOwner.name = request.name
-    PhoneNumberOwner.email = request.email
 
     db.commit()
     db.refresh(PhoneNumberOwner)
