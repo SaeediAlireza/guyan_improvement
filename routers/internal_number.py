@@ -17,7 +17,7 @@ def create_internal_number(
     db: Session = Depends(util.get_db),
 ):
     new_internal_number = model.InternalNumber(
-        number=request.internal_number,
+        internal_number=request.internal_number,
         path=request.path,
         phone_number_id=request.phone_number_id,
     )
