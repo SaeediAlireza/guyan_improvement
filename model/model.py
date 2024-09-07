@@ -8,10 +8,11 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_name = Column(String(999))
+    email = Column(String(999))
     password = Column(String(999))
     fname = Column(String(999))
     lname = Column(String(999))
-    email = Column(String(999))
+
     user_type_id = Column(Integer, ForeignKey("user_types.id"))
     type = relationship("UserType", back_populates="type_users")
 
@@ -56,8 +57,7 @@ class PhoneNumberOwner(Base):
 
     __tablename__ = "phone_number_owners"
     id = Column(Integer, primary_key=True, index=True)
-    fname = Column(String(999))
-    lname = Column(String(999))
+    name = Column(String(999))
     email = Column(String(999))
 
     phone_numbers = relationship("PhoneNumber", back_populates="phone_number_owner")

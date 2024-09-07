@@ -27,7 +27,7 @@ def create_user(
     user_exist = (
         db.query(model.User).filter(model.User.user_name == new_user.user_name).first()
     )
-
+    print("_______________________________________________________________")
     if user_exist:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user exists")
     else:

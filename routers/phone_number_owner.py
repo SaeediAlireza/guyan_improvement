@@ -83,8 +83,7 @@ def update_phone_number_owner(
     )
     if not PhoneNumberOwner:
         response.status_code = status.HTTP_404_NOT_FOUND
-    PhoneNumberOwner.fname = request.fname
-    PhoneNumberOwner.lname = request.lname
+    PhoneNumberOwner.name = request.name
     PhoneNumberOwner.email = request.email
 
     db.commit()

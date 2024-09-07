@@ -77,15 +77,14 @@ class UserInfoResponse(BaseModel):
 
 # phone number owner
 class PhoneNumberOwnerAddRequest(BaseModel):
-    fname: str
-    lname: str
+    name: str
     email: str
 
 
 class PhoneNumberOwnerUpdateRequest(BaseModel):
     id: int
     fname: str
-    lname: str
+    name: str
     email: str
 
     class Config:
@@ -94,8 +93,7 @@ class PhoneNumberOwnerUpdateRequest(BaseModel):
 
 class PhoneNumberOwnerInfoResponse(BaseModel):
     id: int
-    fname: str
-    lname: str
+    name: str
     email: str
 
     class Config:
