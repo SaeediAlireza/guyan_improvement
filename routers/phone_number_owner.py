@@ -16,9 +16,7 @@ def create_phone_number_owner(
     request: schemas.PhoneNumberOwnerAddRequest,
     db: Session = Depends(util.get_db),
 ):
-    new_phone_number_owner = model.PhoneNumberOwner(
-        fname=request.fname, lname=request.lname, email=request.email
-    )
+    new_phone_number_owner = model.PhoneNumberOwner(name=request.name)
     PhoneNumberOwner_exist = (
         db.query(model.PhoneNumberOwner)
         .filter(model.PhoneNumberOwner.name == new_phone_number_owner.name)
