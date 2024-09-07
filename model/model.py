@@ -32,7 +32,7 @@ class InternalNumber(Base):
 
     __tablename__ = "internal_numbers"
     id = Column(Integer, primary_key=True, index=True)
-    number = Column(String(999))
+    internal_number = Column(String(999))
     path = Column(String(999))
 
     phone_number_id = Column(Integer, ForeignKey("phone_numbers.id"))
