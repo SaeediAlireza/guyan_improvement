@@ -50,11 +50,10 @@ def get_all_internal_numbers(
 ):
     InternalNumbers = (
         db.query(model.InternalNumber)
-        .filter(
-            model.InternalNumber.phone_number.phone_number_owner.name.like(
-                f"%{owner_name}%"
-            )
-        )
+        .join(model.PhoneNumber)
+        .join(model.PhoneNumberOwner)
+        .filter(model.PhoneNumberOwner.name.like(f"%{owner_name}%"))
+        .limit(10)
         .all()
     )
     if not InternalNumbers:
