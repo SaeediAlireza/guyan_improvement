@@ -63,7 +63,6 @@ def get_phone_numbers_csv(response: Response, db: Session = Depends(util.get_db)
     df = pd.DataFrame(
         [
             {
-                "id": pn.id,
                 "number": pn.number,
                 "phone_number_owner_id": pn.phone_number_owner_id,
             }
