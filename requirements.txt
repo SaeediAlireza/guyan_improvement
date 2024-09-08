@@ -7,3 +7,4 @@ PyJWT
 python-jose
 pymysql
 python-multipart
+pandas
