@@ -40,10 +40,10 @@ def get_all_internal_numbers(
 
 
 @router.get(
-    "/by-owner-name/{owner_name}",
+    "/by-owner-name{owner_name}",
     response_model=List[schemas.InternalNumberInfoResponse],
 )
-def get_all_internal_numbers(
+def get_internal_numbers_by_owner_name(
     response: Response,
     owner_name: str,
     db: Session = Depends(util.get_db),
