@@ -39,6 +39,29 @@ def get_all_internal_numbers(
     return InternalNumbers
 
 
+@router.get(
+    "/by-owner-name/{owner_name}",
+    response_model=List[schemas.InternalNumberInfoResponse],
+)
+def get_all_internal_numbers(
+    response: Response,
+    owner_name: str,
+    db: Session = Depends(util.get_db),
+):
+    InternalNumbers = (
+        db.query(model.InternalNumber)
+        .filter(
+            model.InternalNumber.phone_number.phone_number_owner.name.like(
+                f"%{owner_name}%"
+            )
+        )
+        .all()
+    )
+    if not InternalNumbers:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return InternalNumbers
+
+
 @router.get("/{InternalNumber_id}", response_model=schemas.InternalNumberInfoResponse)
 def get_internal_number_by_id(
     InternalNumber_id: int,
