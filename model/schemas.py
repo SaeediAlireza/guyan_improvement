@@ -115,7 +115,7 @@ class PhoneNumberUpdateRequest(BaseModel):
 class PhoneNumberInfoResponse(BaseModel):
     id: int
     number: str
-    phone_number_owner_id: PhoneNumberOwnerInfoResponse
+    phone_number_owner: PhoneNumberOwnerInfoResponse
 
     class Config:
         from_attributes = True
