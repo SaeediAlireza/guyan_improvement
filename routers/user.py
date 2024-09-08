@@ -19,15 +19,13 @@ def create_user(
     new_user = model.User(
         user_name=request.user_name,
         password=util.hash(request.password),
-        fname=request.fname,
-        lname=request.lname,
+        name=request.name,
         email=request.email,
         user_type_id=request.user_type_id,
     )
     user_exist = (
         db.query(model.User).filter(model.User.user_name == new_user.user_name).first()
     )
-    print("_______________________________________________________________")
     if user_exist:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="user exists")
     else:
@@ -94,8 +92,7 @@ def update_user(
     user = db.query(model.User).filter(model.User.id == request.id).first()
     if not user:
         response.status_code = status.HTTP_404_NOT_FOUND
-    user.fname = request.fname
-    user.lname = request.lname
+    user.name = request.name
     user.email = request.email
     user.user_name = request.user_name
     user.user_type_id = request.user_type_id

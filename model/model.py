@@ -10,8 +10,7 @@ class User(Base):
     user_name = Column(String(999))
     email = Column(String(999))
     password = Column(String(999))
-    fname = Column(String(999))
-    lname = Column(String(999))
+    name = Column(String(999))
 
     user_type_id = Column(Integer, ForeignKey("user_types.id"))
     type = relationship("UserType", back_populates="type_users")

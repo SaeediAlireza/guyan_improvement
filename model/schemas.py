@@ -37,8 +37,7 @@ class UserTypeInfo(BaseModel):
 class UserAddRequest(BaseModel):
     user_name: str
     password: str
-    fname: str
-    lname: str
+    name: str
     email: str
     user_type_id: int
 
@@ -46,8 +45,7 @@ class UserAddRequest(BaseModel):
 class UserUpdateRequest(BaseModel):
     id: int
     user_name: str
-    fname: str
-    lname: str
+    name: str
     email: str
     user_type_id: int
 
@@ -66,8 +64,7 @@ class UserUpdatePasswordRequest(BaseModel):
 class UserInfoResponse(BaseModel):
     id: int
     user_name: str
-    fname: str
-    lname: str
+    name: str
     email: str
     type: UserTypeInfo
 
