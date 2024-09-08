@@ -1,5 +1,13 @@
 from typing import Annotated, List
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+    Response,
+    UploadFile,
+    File,
+)
 
 from fastapi.responses import StreamingResponse
 from model import model, schemas
@@ -7,6 +15,7 @@ from sqlalchemy.orm import Session
 from util import util
 import pandas as pd
 import io
+from io import StringIO
 
 router = APIRouter(tags=["phone number"], prefix="/phone-numbers")
 
@@ -79,6 +88,45 @@ def get_phone_numbers_csv(response: Response, db: Session = Depends(util.get_db)
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=phone_numbers.csv"},
     )
+
+
+@router.post("csv")
+async def upload_phone_numbers(
+    file: UploadFile = File(...), db: Session = Depends(util.get_db)
+):
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(
+            status_code=400, detail="Invalid file type. Please upload a CSV file."
+        )
+
+    # Read the CSV file content
+    contents = await file.read()
+    csv_data = StringIO(contents.decode("utf-8"))
+
+    # Load the CSV into a DataFrame
+    try:
+        df = pd.read_csv(csv_data)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error reading CSV file: {str(e)}")
+
+    # Validate DataFrame columns
+    required_columns = {"number", "phone_number_owner_id"}  # Adjust as needed
+    if not required_columns.issubset(df.columns):
+        raise HTTPException(
+            status_code=400,
+            detail="CSV must contain columns: number, phone_number_owner_id",
+        )
+
+    # Insert data into the database
+    for _, row in df.iterrows():
+        new_phone_number = model.PhoneNumber(
+            number=row["number"], phone_number_owner_id=row["phone_number_owner_id"]
+        )
+        db.add(new_phone_number)
+
+    db.commit()  # Commit the session to save the changes
+
+    return {"detail": "Phone numbers uploaded successfully"}
 
 
 @router.put("update")
