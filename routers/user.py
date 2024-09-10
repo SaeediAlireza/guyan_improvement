@@ -98,8 +98,6 @@ def get_users_by_name(
         .limit(10)
         .all()
     )
-    if not users:
-        response.status_code = status.HTTP_404_NOT_FOUND
     return users
 
 

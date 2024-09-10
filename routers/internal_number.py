@@ -56,8 +56,6 @@ def get_internal_numbers_by_owner_name(
         .limit(10)
         .all()
     )
-    if not InternalNumbers:
-        response.status_code = status.HTTP_404_NOT_FOUND
     return InternalNumbers
 
 
