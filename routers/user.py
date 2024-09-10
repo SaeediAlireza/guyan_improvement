@@ -84,7 +84,7 @@ def get_user_by_id(
 
 
 @router.get(
-    "/by-name{user_name}",
+    "/by-name/{user_name}",
     response_model=List[schemas.UserInfoResponse],
 )
 def get_users_by_name(
