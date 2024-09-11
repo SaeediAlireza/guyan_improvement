@@ -39,6 +39,17 @@ def get_all_internal_numbers(
     return InternalNumbers
 
 
+@router.get("/head", response_model=List[schemas.InternalNumberInfoResponse])
+def get_15_internal_numbers(
+    response: Response,
+    db: Session = Depends(util.get_db),
+):
+    InternalNumbers = db.query(model.InternalNumber).limit(15).all()
+    if not InternalNumbers:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return InternalNumbers
+
+
 @router.get(
     "/by-owner-name{owner_name}",
     response_model=List[schemas.InternalNumberInfoResponse],
