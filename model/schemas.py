@@ -79,7 +79,6 @@ class PhoneNumberOwnerAddRequest(BaseModel):
 
 class PhoneNumberOwnerUpdateRequest(BaseModel):
     id: int
-    fname: str
     name: str
 
     class Config:
