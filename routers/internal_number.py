@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from model import model, schemas
 from sqlalchemy.orm import Session
@@ -14,6 +14,7 @@ router = APIRouter(tags=["internal-number"], prefix="/internal-numbers")
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 def create_internal_number(
     request: schemas.InternalNumberAddRequest,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_internal_number = model.InternalNumber(

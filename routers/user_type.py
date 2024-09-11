@@ -13,7 +13,7 @@ router = APIRouter(tags=["user type"], prefix="/user-type")
 @router.post("/add")
 def add_user_type(
     request: schemas.UserTypeAddRequest,
-    # current_user: Annotated[schemas.UserInfo, Depends(util.get_current_user)],
+    # current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_user_type = model.UserType(name=request.name)
