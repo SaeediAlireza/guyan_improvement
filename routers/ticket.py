@@ -22,7 +22,7 @@ def create_ticket(
     )
     Ticket_exist = (
         db.query(model.Ticket)
-        .filter(model.Ticket.Ticket_name == new_ticket.Ticket_name)
+        .filter(model.Ticket.description == new_ticket.description)
         .first()
     )
 
