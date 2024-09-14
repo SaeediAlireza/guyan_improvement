@@ -31,5 +31,5 @@ def login(
         token_type="bearer",
         user_type=user.user_type_id,
         email=user.email,
-        name=user.fname + user.lname,
+        name=user.name,
     )
