@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from model import model, schemas
 from sqlalchemy.orm import Session
@@ -14,6 +14,7 @@ router = APIRouter(tags=["phone-number-owner"], prefix="/phone-number-owners")
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 def create_phone_number_owner(
     request: schemas.PhoneNumberOwnerAddRequest,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_phone_number_owner = model.PhoneNumberOwner(name=request.name)
@@ -37,6 +38,7 @@ def create_phone_number_owner(
 @router.get("/all", response_model=List[schemas.PhoneNumberOwnerInfoResponse])
 def get_all_phone_number_owners(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     PhoneNumberOwners = db.query(model.PhoneNumberOwner).all()
@@ -51,6 +53,7 @@ def get_all_phone_number_owners(
 def get_phone_number_owner_by_id(
     PhoneNumberOwner_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
 
@@ -68,6 +71,7 @@ def get_phone_number_owner_by_id(
 @router.put("update")
 def update_phone_number_owner(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.PhoneNumberOwnerUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -89,6 +93,7 @@ def update_phone_number_owner(
 def delete_phone_number_owner_by_id(
     PhoneNumberOwner_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     PhoneNumberOwner = (

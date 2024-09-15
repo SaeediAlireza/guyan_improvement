@@ -13,7 +13,7 @@ router = APIRouter(tags=["user type"], prefix="/user-type")
 @router.post("/add")
 def add_user_type(
     request: schemas.UserTypeAddRequest,
-    # current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_user_type = model.UserType(name=request.name)
@@ -26,6 +26,7 @@ def add_user_type(
 @router.get("/all", response_model=List[schemas.UserTypeInfo])
 def get_all_user_types(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     user_types = db.query(model.UserType).all()
@@ -38,6 +39,7 @@ def get_all_user_types(
 def get_user_type_by_id(
     user_type_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     user_type = (
@@ -51,6 +53,7 @@ def get_user_type_by_id(
 @router.put("update")
 def update_user_type(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.UserTypeUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -68,6 +71,7 @@ def update_user_type(
 def delete_user_type_by_id(
     user_type_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     user_type = (

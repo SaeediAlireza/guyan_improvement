@@ -32,6 +32,7 @@ def create_internal_number(
 @router.get("/all", response_model=List[schemas.InternalNumberInfoResponse])
 def get_all_internal_numbers(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     InternalNumbers = db.query(model.InternalNumber).all()
@@ -43,6 +44,7 @@ def get_all_internal_numbers(
 @router.get("/head", response_model=List[schemas.InternalNumberInfoResponse])
 def get_15_internal_numbers(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     InternalNumbers = db.query(model.InternalNumber).limit(15).all()
@@ -57,6 +59,7 @@ def get_15_internal_numbers(
 )
 def get_internal_numbers_by_owner_name(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     owner_name: str,
     db: Session = Depends(util.get_db),
 ):
@@ -75,6 +78,7 @@ def get_internal_numbers_by_owner_name(
 def get_internal_number_by_id(
     InternalNumber_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
 
@@ -92,6 +96,7 @@ def get_internal_number_by_id(
 @router.put("update")
 def update_internal_number(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.InternalNumberUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -114,6 +119,7 @@ def update_internal_number(
 def delete_internal_number_by_id(
     InternalNumber_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     InternalNumber = (

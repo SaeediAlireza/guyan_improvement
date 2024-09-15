@@ -23,7 +23,6 @@ router = APIRouter(tags=["phone number"], prefix="/phone-numbers")
 @router.post("/add")
 def add_phone_number(
     request: schemas.PhoneNumberAddRequest,
-    # current_user: Annotated[schemas.UserInfo, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_phone_number = model.PhoneNumber(
@@ -39,6 +38,7 @@ def add_phone_number(
 @router.get("/all", response_model=List[schemas.PhoneNumberInfoResponse])
 def get_all_phone_numbers(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     phone_numbers = db.query(model.PhoneNumber).all()
@@ -51,6 +51,7 @@ def get_all_phone_numbers(
 def get_phone_number_by_id(
     phone_number_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     phone_number = (
@@ -64,7 +65,11 @@ def get_phone_number_by_id(
 
 
 @router.get("csv")
-def get_phone_numbers_csv(response: Response, db: Session = Depends(util.get_db)):
+def get_phone_numbers_csv(
+    response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
+    db: Session = Depends(util.get_db),
+):
     # Query all phone numbers
     phone_numbers = db.query(model.PhoneNumber).all()
 
@@ -134,6 +139,7 @@ async def upload_phone_numbers(
 @router.put("update")
 def update_phone_number(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.PhoneNumberUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -155,6 +161,7 @@ def update_phone_number(
 def delete_phone_number_by_id(
     phone_number_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     phone_number = (

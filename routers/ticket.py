@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from model import model, schemas
 from sqlalchemy.orm import Session
@@ -14,6 +14,7 @@ router = APIRouter(tags=["ticket"], prefix="/tickets")
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 def create_ticket(
     request: schemas.TicketAddRequest,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_ticket = model.Ticket(
@@ -40,6 +41,7 @@ def create_ticket(
 @router.get("/all", response_model=List[schemas.TicketInfoResponse])
 def get_all_tickets(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     Tickets = db.query(model.Ticket).all()
@@ -52,6 +54,7 @@ def get_all_tickets(
 def get_ticket_by_id(
     Ticket_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
 
@@ -65,6 +68,7 @@ def get_ticket_by_id(
 @router.put("update")
 def update_ticket(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.TicketUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -82,6 +86,7 @@ def update_ticket(
 def delete_ticket_by_id(
     Ticket_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     Ticket = db.query(model.Ticket).filter(model.Ticket.id == Ticket_id).first()

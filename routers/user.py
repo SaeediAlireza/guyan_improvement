@@ -1,4 +1,4 @@
-from typing import List
+from typing import Annotated, List
 from fastapi import APIRouter, Depends, HTTPException, status, Response
 from model import model, schemas
 from sqlalchemy.orm import Session
@@ -14,6 +14,7 @@ router = APIRouter(tags=["user"], prefix="/users")
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 def create_user(
     request: schemas.UserAddRequest,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     new_user = model.User(
@@ -39,6 +40,7 @@ def create_user(
 def get_users_by_type(
     type_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     users = db.query(model.User).filter(model.User.user_type_id == type_id).all()
@@ -50,6 +52,7 @@ def get_users_by_type(
 @router.get("/all", response_model=List[schemas.UserInfoResponse])
 def get_all_users(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     users = db.query(model.User).all()
@@ -61,6 +64,7 @@ def get_all_users(
 @router.get("/all/head", response_model=List[schemas.UserInfoResponse])
 def get_15_users(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     users = db.query(model.User).limit(10).all()
@@ -73,6 +77,7 @@ def get_15_users(
 def get_user_by_id(
     user_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
 
@@ -89,6 +94,7 @@ def get_user_by_id(
 )
 def get_users_by_name(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     user_name: str,
     db: Session = Depends(util.get_db),
 ):
@@ -104,6 +110,7 @@ def get_users_by_name(
 @router.put("update")
 def update_user(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.UserUpdateRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -123,6 +130,7 @@ def update_user(
 @router.put("password")
 def update_user_password(
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     request: schemas.UserUpdatePasswordRequest,
     db: Session = Depends(util.get_db),
 ):
@@ -140,6 +148,7 @@ def update_user_password(
 def delete_user_by_id(
     user_id: int,
     response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
     user = db.query(model.User).filter(model.User.id == user_id).first()
