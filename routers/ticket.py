@@ -50,19 +50,51 @@ def get_all_tickets(
     return Tickets
 
 
-@router.get("/{Ticket_id}", response_model=schemas.TicketInfoResponse)
+@router.get("/{ticket_id}", response_model=schemas.TicketInfoResponse)
 def get_ticket_by_id(
-    Ticket_id: int,
+    ticket_id: int,
     response: Response,
     current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
     db: Session = Depends(util.get_db),
 ):
 
-    Ticket = db.query(model.Ticket).filter(model.Ticket.id == Ticket_id).first()
+    Ticket = db.query(model.Ticket).filter(model.Ticket.id == ticket_id).first()
 
     if not Ticket:
         response.status_code = status.HTTP_404_NOT_FOUND
     return Ticket
+
+
+@router.get("/user-ticket/{user_id}", response_model=schemas.TicketInfoResponse)
+def get_ticket_by_user_id(
+    user_id: int,
+    response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
+    db: Session = Depends(util.get_db),
+):
+
+    Ticket = db.query(model.Ticket).filter(model.Ticket.user_id == user_id).first()
+
+    if not Ticket:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return Ticket
+
+
+@router.get(
+    "/all-user-tickets/{user_id}", response_model=List[schemas.TicketInfoResponse]
+)
+def get_all_ticket_by_user_id(
+    user_id: int,
+    response: Response,
+    current_user: Annotated[schemas.UserInfoResponse, Depends(util.get_current_user)],
+    db: Session = Depends(util.get_db),
+):
+
+    Tickets = db.query(model.Ticket).filter(model.Ticket.user_id == user_id).all()
+
+    if not Tickets:
+        response.status_code = status.HTTP_404_NOT_FOUND
+    return Tickets
 
 
 @router.put("update")
