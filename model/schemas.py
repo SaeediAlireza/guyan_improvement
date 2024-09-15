@@ -9,6 +9,7 @@ class Token(BaseModel):
     user_type: int
     email: str
     name: str
+    id: int
 
 
 class TokenData(BaseModel):

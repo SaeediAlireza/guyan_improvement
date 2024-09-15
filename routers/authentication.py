@@ -32,4 +32,5 @@ def login(
         user_type=user.user_type_id,
         email=user.email,
         name=user.name,
+        id=user.id,
     )
