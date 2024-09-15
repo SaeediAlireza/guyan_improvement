@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Response
 from model import model, schemas
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import Session
-from sqlalchemy import update
+from sqlalchemy import desc, update
 
 from util import util
 
@@ -73,7 +73,12 @@ def get_ticket_by_user_id(
     db: Session = Depends(util.get_db),
 ):
 
-    Ticket = db.query(model.Ticket).filter(model.Ticket.user_id == user_id).first()
+    Ticket = (
+        db.query(model.Ticket)
+        .filter(model.Ticket.user_id == user_id)
+        .order_by(desc(model.Ticket.id))
+        .first()
+    )
 
     if not Ticket:
         response.status_code = status.HTTP_404_NOT_FOUND
