@@ -71,18 +71,20 @@ def get_phone_numbers_csv(
     db: Session = Depends(util.get_db),
 ):
     # Query all phone numbers
-    phone_numbers = db.query(model.PhoneNumber).all()
+    internal_numbers = db.query(model.InternalNumber).all()
 
-    if not phone_numbers:
+    if not internal_numbers:
         response.status_code = status.HTTP_404_NOT_FOUND
 
     df = pd.DataFrame(
         [
             {
-                "number": pn.number,
-                "phone_number_owner_name": pn.phone_number_owner.name,
+                "internal": pn.internal_number,
+                "path": pn.path,
+                "number": pn.phone_number.number,
+                "phone_number_owner_name": pn.phone_number.phone_number_owner.name,
             }
-            for pn in phone_numbers
+            for pn in internal_numbers
         ]
     )
 
