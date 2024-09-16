@@ -151,8 +151,17 @@ async def upload_phone_numbers(
             number=row["number"], phone_number_owner_id=phone_number_owner_id
         )
         db.add(new_phone_number)
+        db.commit()
+        db.refresh(new_phone_number)
+        new_internal_number = model.InternalNumber(
+            internal_number=row["internal"],
+            path=row["path"],
+            phone_number_id=new_phone_number.id,
+        )
+        db.add(new_internal_number)
+        db.commit()
 
-    db.commit()  # Commit the session to save the changes
+    # Commit the session to save the changes
 
     return {"detail": "Phone numbers uploaded successfully"}
 
