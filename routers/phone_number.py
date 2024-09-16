@@ -80,7 +80,7 @@ def get_phone_numbers_csv(
         [
             {
                 "number": pn.number,
-                "phone_number_owner_id": pn.phone_number_owner_id,
+                "phone_number_owner_name": pn.phone_number_owner.name,
             }
             for pn in phone_numbers
         ]
@@ -117,17 +117,36 @@ async def upload_phone_numbers(
         raise HTTPException(status_code=400, detail=f"Error reading CSV file: {str(e)}")
 
     # Validate DataFrame columns
-    required_columns = {"number", "phone_number_owner_id"}  # Adjust as needed
+    required_columns = {"number", "phone_number_owner_name"}  # Adjust as needed
     if not required_columns.issubset(df.columns):
         raise HTTPException(
             status_code=400,
-            detail="CSV must contain columns: number, phone_number_owner_id",
+            detail="CSV must contain columns: number, phone_number_owner_name",
         )
 
     # Insert data into the database
     for _, row in df.iterrows():
+        phone_number_owner_id = 0
+
+        new_phone_number_owner = model.PhoneNumberOwner(
+            name=row["phone_number_owner_name"]
+        )
+        PhoneNumberOwner_exist = (
+            db.query(model.PhoneNumberOwner)
+            .filter(model.PhoneNumberOwner.name == new_phone_number_owner.name)
+            .first()
+        )
+
+        if PhoneNumberOwner_exist:
+            phone_number_owner_id = PhoneNumberOwner_exist.id
+        else:
+            db.add(new_phone_number_owner)
+            db.commit()
+            db.refresh(new_phone_number_owner)
+            phone_number_owner_id = new_phone_number_owner.id
+        db.query(model.PhoneNumberOwner)
         new_phone_number = model.PhoneNumber(
-            number=row["number"], phone_number_owner_id=row["phone_number_owner_id"]
+            number=row["number"], phone_number_owner_id=phone_number_owner_id
         )
         db.add(new_phone_number)
 
